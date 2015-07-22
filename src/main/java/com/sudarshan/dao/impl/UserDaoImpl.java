@@ -11,7 +11,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -32,7 +37,7 @@ public class UserDaoImpl implements UserDao {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("id", id);
 
-		String sql = "SELECT * FROM AppUser WHERE ID=:id";
+		String sql = "SELECT * FROM APPUSER WHERE ID=:id";
 		AppUser appUsr = null;
 
 		try {
@@ -44,31 +49,50 @@ public class UserDaoImpl implements UserDao {
 		return appUsr;
 	}
 
+	@Transactional(readOnly=true)
 	@Override
 	public List<AppUser> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "SELECT * FROM APPUSER";
+		List<AppUser> userList = null;
+
+		try {
+			userList = namedParametJdbcTmplt.query(sql, new UserRowMapper());
+		} catch(Exception exp) {
+			return null;
+		}
+
+		return userList;
 	}
 
 
-
+	@Transactional
 	@Override
 	public void save(AppUser appuser) {
-		// TODO Auto-generated method stub
+		String sql = "INSERT INTO APPUSER (ID, NAME, EMAIL, ADDRESS, PASSWORD, NEWSLETTER, FRAMEWORK, SEX, NUM, COUNTRY, SKILL) VALUES "
+				+ "  (MY_USER_SEQ.NEXTVAL, :name, :email, :address, :password, :newsletter, :framework, :sex, :num, :country, :skill)";
+		KeyHolder keyHolder = new GeneratedKeyHolder();
 
+		namedParametJdbcTmplt.update(sql, getSqlParamterSource(appuser), keyHolder);
+		appuser.setId(keyHolder.getKey().intValue());
 	}
 
+
+	@Transactional
 	@Override
 	public void update(AppUser appuser) {
-		// TODO Auto-generated method stub
+		String sql = "UPDATE APPUSER SET NAME=:name, EMAIL=:email, ADDRESS=:address, PASSWORD=:password, NEWSLETTER=:newsletter, FRAMEWORK=:framework"
+				+ " SEX=:sex, NUM=:num, COUNTRY=:country, SKILL=:skill WHERE ID=:id";
 
+		namedParametJdbcTmplt.update(sql, getSqlParamterSource(appuser));
 	}
-
+	
+	@Transactional
 	@Override
-	public void delete(AppUser appuser) {
-		// TODO Auto-generated method stub
-
+	public void delete(int id) {
+		String sql = "DELETE FROM APPUSER WHERE id= :id";
+		namedParametJdbcTmplt.update(sql, new MapSqlParameterSource("id", id));
 	}
+	
 
 	private static final class UserResultSet implements ResultSetExtractor<AppUser> {
 
@@ -111,5 +135,47 @@ public class UserDaoImpl implements UserDao {
 		return result;
 
 	}
+
+	private static final class UserRowMapper implements RowMapper<AppUser> {
+
+		@Override
+		public AppUser mapRow(ResultSet rs, int arg1) throws SQLException {
+			AppUser user = new AppUser();
+			user.setId(rs.getInt("id"));
+			user.setName(rs.getString("name"));
+			user.setEmail(rs.getString("email"));
+			user.setFramework(convertDelimitedStringToList(rs.getString("framework")));
+			user.setAddress(rs.getString("address"));
+			user.setCountry(rs.getString("country"));
+			user.setNewsletter(rs.getInt("newsletter"));
+			user.setNumber(rs.getInt("number"));
+			user.setPassword(rs.getString("password"));
+			user.setSex(rs.getString("sex"));
+			user.setSkill(convertDelimitedStringToList(rs.getString("skill")));
+			return user;
+		}
+
+	}
+
+	private SqlParameterSource getSqlParamterSource(AppUser user) {
+		MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+
+		sqlParameterSource.addValue("id", user.getId());
+		sqlParameterSource.addValue("name", user.getName());
+		sqlParameterSource.addValue("email", user.getEmail());
+		sqlParameterSource.addValue("address", user.getAddress());
+		sqlParameterSource.addValue("password", user.getPassword());
+		sqlParameterSource.addValue("newsletter", user.getNewsletter());
+
+		sqlParameterSource.addValue("framework", convertListToDelimitedString(user.getFramework()));
+		sqlParameterSource.addValue("sex", user.getSex());
+		sqlParameterSource.addValue("number", user.getNumber());
+		sqlParameterSource.addValue("country", user.getCountry());
+		sqlParameterSource.addValue("skill", convertListToDelimitedString(user.getSkill()));
+
+		return sqlParameterSource;
+	}
+
+
 
 }

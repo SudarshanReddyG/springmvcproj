@@ -1,19 +1,17 @@
-package com.sudarshan.dao;
+package com.sudarshan.service;
 
 import java.util.List;
 
 import com.sudarshan.model.AppUser;
 
-public interface UserDao {
+public interface UserService {
 	
 	AppUser findById(Integer id);
-	
+	 
 	List<AppUser> findAll();
-	
-	void save(AppUser appuser);
-	
-	void update(AppUser appuser);
-	
+ 
+	void saveOrUpdate(AppUser user);
+ 
 	void delete(int id);
-	
+
 }
