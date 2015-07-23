@@ -3,11 +3,13 @@ package com.sudarshan.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.sudarshan.dao.UserDao;
 import com.sudarshan.model.AppUser;
 import com.sudarshan.service.UserService;
 
+@Service
 public class UserServiceImpl implements UserService {
 
 	@Autowired

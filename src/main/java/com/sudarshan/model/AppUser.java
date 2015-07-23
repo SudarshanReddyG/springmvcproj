@@ -20,11 +20,11 @@ public class AppUser {
 	
 	private List<String> framework;
 	
-	private String Sex;
+	private String sex;
 	
 	private Integer number;
 	
-	private String Country;
+	private String country;
 	
 	private List<String> skill;
 	
@@ -97,11 +97,11 @@ public class AppUser {
 	}
 
 	public String getSex() {
-		return Sex;
+		return sex;
 	}
 
 	public void setSex(String sex) {
-		Sex = sex;
+		this.sex = sex;
 	}
 
 	public Integer getNumber() {
@@ -113,11 +113,11 @@ public class AppUser {
 	}
 
 	public String getCountry() {
-		return Country;
+		return country;
 	}
 
 	public void setCountry(String country) {
-		Country = country;
+		this.country = country;
 	}
 
 	public List<String> getSkill() {

@@ -16,7 +16,7 @@ public class SpringDbConf {
 	public BasicDataSource getDataSource() {
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
-		dataSource.setUrl("jdbc:oracle:thin:@localhost:1521:SA");
+		dataSource.setUrl("jdbc:oracle:thin:@172.16.9.93:1521:SFMS");
 		dataSource.setUsername("sudarshan");
 		dataSource.setPassword("sudarshan");
 		

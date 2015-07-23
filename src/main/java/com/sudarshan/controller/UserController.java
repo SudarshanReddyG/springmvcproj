@@ -46,7 +46,7 @@ public class UserController {
 	public String findAllUsers(Model model) {
 		List<AppUser> allUsers = userService.findAll();
 		model.addAttribute("users", allUsers);
-		return "users/list";
+		return "list";
 	}
 
 	@RequestMapping(value="/users/add", method=RequestMethod.GET)
@@ -66,15 +66,15 @@ public class UserController {
 
 		populateDefaultModel(model);
 
-		return "users/userform";
+		return "userform";
 	}
 
 
-	@RequestMapping
+	@RequestMapping(value="/users", method=RequestMethod.POST)
 	public String saveOrUpdateUser(@ModelAttribute("userForm") @Validated AppUser userObj, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
 		if(result.hasErrors()) {
 			populateDefaultModel(model);
-			return "users/userform";
+			return "userform";
 		} else {
 			redirectAttributes.addFlashAttribute("css", "success");
 			if(userObj.isNew()){
@@ -96,7 +96,7 @@ public class UserController {
  
 		populateDefaultModel(model);
  
-		return "users/userform";
+		return "userform";
  
 	}	
 	
@@ -123,7 +123,7 @@ public class UserController {
 		}
 		model.addAttribute("user", user);
  
-		return "users/show";
+		return "show";
  
 	}
 

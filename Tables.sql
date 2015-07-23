@@ -11,3 +11,12 @@ CREATE TABLE APPUSER (
   COUNTRY VARCHAR(10),
   SKILL VARCHAR(500)
 );
+
+
+INSERT INTO APPUSER (id, name, email, framework) VALUES (1, 'mkyong', 'mkyong@gmail.com', 'Spring MVC, GWT');
+INSERT INTO APPUSER (id, name, email, framework) VALUES (2, 'alex', 'alex@yahoo.com', 'Spring MVC, GWT');
+INSERT INTO APPUSER (id, name, email, framework) VALUES (3, 'joel', 'joel@gmail.com', 'Spring MVC, GWT');
+
+
+
+COMMIT;

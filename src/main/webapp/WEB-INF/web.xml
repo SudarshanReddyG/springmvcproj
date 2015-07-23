@@ -18,7 +18,7 @@
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>springconf/applicationdispatcher.xml</param-value>
+			<param-value>/springconf/applicationdispatcher.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -34,6 +34,6 @@
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>springconf/applicationRootContext.xml</param-value>
+		<param-value>/springconf/applicationRootContext.xml</param-value>
 	</context-param>
 </web-app>
