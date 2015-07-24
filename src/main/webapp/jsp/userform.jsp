@@ -20,7 +20,7 @@
 		</c:choose>
 		<br/>
 		
-		<spring:url value="/uers" var="userActionUrl"/>
+		<spring:url value="/users" var="userActionUrl"/>
 		
 		<form:form class="form-horizontal" action="${userActionUrl}" method="POST" modelAttribute="userForm">
 			<form:hidden path="id"/>
@@ -83,7 +83,7 @@
 					<label class="col-sm-2 control-label">NewsLetter</label>
 					<div class="col-sm-10">
 						<div class="checkbox">
-							<label><form:checkbox path="newsletter" id="newsletter" /></label>
+							<label><form:checkbox path="newsletter" value="1" id="newsletter" /></label>
 							<form:errors path="newsletter" cssClass="control-label"/>
 						</div>
 					</div>
@@ -95,7 +95,7 @@
 				<div class="form-group ${status.error ? 'has-error':''}">
 					<label class="col-sm-2 control-label">Web Frameworks</label>
 					<div class="col-sm-10">
-						<form:checkboxes items="frameworkList" path="framework" element="label class='checkbox-inline'"/>
+						<form:checkboxes items="${frameworkList}" path="framework" element="label class='checkbox-inline'"/>
 						<br/>
 						<form:errors path="framework" cssClass="control-label"/>
 					</div>

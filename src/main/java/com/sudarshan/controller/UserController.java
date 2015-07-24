@@ -6,17 +6,21 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sudarshan.model.AppUser;
@@ -44,7 +48,9 @@ public class UserController {
 
 	@RequestMapping(value="/users",method=RequestMethod.GET)
 	public String findAllUsers(Model model) {
+		System.out.println("Hello");
 		List<AppUser> allUsers = userService.findAll();
+		System.out.println("Byeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 		model.addAttribute("users", allUsers);
 		return "list";
 	}
@@ -100,7 +106,7 @@ public class UserController {
  
 	}	
 	
-	@RequestMapping(value = "/users/{id}/delete", method = RequestMethod.POST)
+	@RequestMapping(value = "/users/{id}/delete", method = RequestMethod.GET)
 	public String deleteUser(@PathVariable("id") int id, 
 		final RedirectAttributes redirectAttributes) {
  
@@ -162,7 +168,18 @@ public class UserController {
 		model.addAttribute("countryList", country);
 
 	}
-
+	
+	//Generic to this Controller
+	/*@ExceptionHandler
+	public ModelAndView handleExceptionInThisController(HttpServletRequest req, Exception exp) {
+		ModelAndView model = new ModelAndView("springerror");
+		
+		model.addObject("reqUrl", req.getRequestURL());
+		model.addObject("exception", exp);
+		model.addObject("name", exp.getClass().getName());
+		model.addObject("message", exp.getMessage());
+		return model;
+	}*/
 
 
 }

@@ -13,7 +13,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages={"com.sudarshan.controller","com.sudarshan.dao.impl","com.sudarshan.service.impl,com.sudarshan.validator"})
+@ComponentScan(basePackages={"com.sudarshan.controller","com.sudarshan.dao.impl","com.sudarshan.service.impl,com.sudarshan.validator,com.sudarshan.exception"})
 public class SpringWebConf extends WebMvcConfigurerAdapter {
 	
 	@Override

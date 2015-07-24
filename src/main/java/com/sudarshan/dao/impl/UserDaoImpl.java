@@ -37,12 +37,13 @@ public class UserDaoImpl implements UserDao {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("id", id);
 
-		String sql = "SELECT * FROM APPUSER WHERE ID=:id";
+		String sql = "SELECT ID, NAME, EMAIL, ADDRESS, PASSWORD, NEWSLETTER, FRAMEWORK, SEX, NUM, COUNTRY, SKILL FROM APPUSER WHERE ID=:id";
 		AppUser appUsr = null;
 
 		try {
 			appUsr =  namedParametJdbcTmplt.query(sql, params, new UserResultSet());
 		} catch (Exception exp) {
+			exp.printStackTrace();
 			return null;
 		}
 
@@ -52,13 +53,14 @@ public class UserDaoImpl implements UserDao {
 	@Transactional(readOnly=true)
 	@Override
 	public List<AppUser> findAll() {
-		String sql = "SELECT * FROM APPUSER";
+		String sql = "SELECT ID1, NAME, EMAIL, ADDRESS, PASSWORD, NEWSLETTER, FRAMEWORK, SEX, NUM, COUNTRY, SKILL FROM APPUSER";
 		List<AppUser> userList = null;
 
 		try {
 			userList = namedParametJdbcTmplt.query(sql, new UserRowMapper());
 		} catch(Exception exp) {
-			return null;
+			throw exp;
+			//return null;
 		}
 
 		return userList;
@@ -72,7 +74,7 @@ public class UserDaoImpl implements UserDao {
 				+ "  (MY_USER_SEQ.NEXTVAL, :name, :email, :address, :password, :newsletter, :framework, :sex, :num, :country, :skill)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
-		namedParametJdbcTmplt.update(sql, getSqlParamterSource(appuser), keyHolder);
+		namedParametJdbcTmplt.update(sql, getSqlParamterSource(appuser), keyHolder,new String[]{"id"});
 		appuser.setId(keyHolder.getKey().intValue());
 	}
 
@@ -80,36 +82,38 @@ public class UserDaoImpl implements UserDao {
 	@Transactional
 	@Override
 	public void update(AppUser appuser) {
-		String sql = "UPDATE APPUSER SET NAME=:name, EMAIL=:email, ADDRESS=:address, PASSWORD=:password, NEWSLETTER=:newsletter, FRAMEWORK=:framework"
+		String sql = "UPDATE APPUSER SET NAME=:name, EMAIL=:email, ADDRESS=:address, PASSWORD=:password, NEWSLETTER=:newsletter, FRAMEWORK=:framework,"
 				+ " SEX=:sex, NUM=:num, COUNTRY=:country, SKILL=:skill WHERE ID=:id";
 
 		namedParametJdbcTmplt.update(sql, getSqlParamterSource(appuser));
 	}
-	
+
 	@Transactional
 	@Override
 	public void delete(int id) {
 		String sql = "DELETE FROM APPUSER WHERE id= :id";
 		namedParametJdbcTmplt.update(sql, new MapSqlParameterSource("id", id));
 	}
-	
+
 
 	private static final class UserResultSet implements ResultSetExtractor<AppUser> {
 
 		@Override
 		public AppUser extractData(ResultSet rs) throws SQLException, DataAccessException {
 			AppUser user = new AppUser();
-			user.setId(rs.getInt("id"));
-			user.setName(rs.getString("name"));
-			user.setEmail(rs.getString("email"));
-			user.setFramework(convertDelimitedStringToList(rs.getString("framework")));
-			user.setAddress(rs.getString("address"));
-			user.setCountry(rs.getString("country"));
-			user.setNewsletter(rs.getInt("newsletter"));
-			user.setNumber(rs.getInt("number"));
-			user.setPassword(rs.getString("password"));
-			user.setSex(rs.getString("sex"));
-			user.setSkill(convertDelimitedStringToList(rs.getString("skill")));
+			if(rs.next()) {
+				user.setId(rs.getInt("id"));
+				user.setName(rs.getString("name"));
+				user.setEmail(rs.getString("email"));
+				user.setFramework(convertDelimitedStringToList(rs.getString("framework")));
+				user.setAddress(rs.getString("address"));
+				user.setCountry(rs.getString("country"));
+				user.setNewsletter(rs.getInt("newsletter"));
+				user.setNumber(rs.getInt("num"));
+				user.setPassword(rs.getString("password"));
+				user.setSex(rs.getString("sex"));
+				user.setSkill(convertDelimitedStringToList(rs.getString("skill")));
+			}
 			return user;
 		}
 
@@ -148,7 +152,7 @@ public class UserDaoImpl implements UserDao {
 			user.setAddress(rs.getString("address"));
 			user.setCountry(rs.getString("country"));
 			user.setNewsletter(rs.getInt("newsletter"));
-			user.setNumber(rs.getInt("number"));
+			user.setNumber(rs.getInt("num"));
 			user.setPassword(rs.getString("password"));
 			user.setSex(rs.getString("sex"));
 			user.setSkill(convertDelimitedStringToList(rs.getString("skill")));
@@ -169,7 +173,7 @@ public class UserDaoImpl implements UserDao {
 
 		sqlParameterSource.addValue("framework", convertListToDelimitedString(user.getFramework()));
 		sqlParameterSource.addValue("sex", user.getSex());
-		sqlParameterSource.addValue("number", user.getNumber());
+		sqlParameterSource.addValue("num", user.getNumber());
 		sqlParameterSource.addValue("country", user.getCountry());
 		sqlParameterSource.addValue("skill", convertListToDelimitedString(user.getSkill()));
 
